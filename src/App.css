@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+  width: auto;
+  height: auto;
+}
+/* Login CSS Starts */
+.login-container {
+  width: 50vw;
+  height: 50vh;
+  display: block;
+  margin-top: 20vh;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: solid;
+  border-width: 0.1em;
+}
+
+.login-heading-1 {
+  text-align: center;
+}
+
+.login-heading-2 {
+  text-align: center;
+  background-color: darkcyan;
+  color: white;
+  margin-left: -1px;
+}
+
+.login-label {
+  padding-left: 15vw;
+}
+
+.login-value-1 {
+  margin-left: 2vw;
+  width: 15vw;
+  height: 5vh;
+}
+
+.login-value-2 {
+  margin-left: 2.45em;
+  width: 15vw;
+  height: 5vh;
+  margin-top: 20px;
+}
+
+.login-submit {
+  margin-left: 24em;
+  margin-top: 2em;
+}
+
+.login-error-message {
+  text-align: center;
+  color: red;
+}
+
+.login-success-message {
+  text-align: center;
+  color: green;
+}
+/* Login CSS Ends */
+
+/* Defect Details section starts here */
+.grid-container {
+  /* display: grid;
+  grid-template-columns: auto 1fr; */
+  /* display: block; */
+  margin-top: 10vh;
+  border: solid 1px;
+  /* TB RL */
+}
+
+.defect-logout,
+.defect-title,
+.defect-filter,
+.defect-search,
+.defects-add-view,
+.defect-category,
+.defect-category-2,
+.defect-search,
+.defect-search-result {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  align-items: center;
+}
+.defect-filter-container {
+  border: solid 1px;
+  padding: 10px 10px;
+}
+
+.defect-items {
+  padding: 10px 10px;
+}
+
+.defect-filters {
+  padding: 20px 30px;
+  margin-top: 10px;
+}
+
+/* Defect Details section ends here */
+
+/* Defect Table Starts*/
+.defect-columns {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+  text-align: center;
+  margin-left: 5vw;
+  margin-top: 10px;
+  margin-right: 30px;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
+  border-color: yellow;
+  border: 1px solid gray;
+  background-color: #1063e8;
+  /* padding: 2px; */
+  color: white;
+  /* align-items: center; */
+  overflow-wrap: break-word;
+}
+
+.defect-column {
+  border-right: 1px solid gray;
+}
+
+.defect-rows {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 2fr;
+  margin-left: 5vw;
+  margin-right: 30px;
+  border-right: 1px solid gray;
+  text-align: center;
+  border-bottom: 1px solid gray;
+  border-color: yellow;
+  border: 1px solid gray;
+  /* padding: 2px; */
+  align-items: center;
+  overflow-wrap: break-word;
+}
+
+.count-items {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.defect-addition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
