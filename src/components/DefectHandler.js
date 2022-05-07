@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useLocation,
+  useParams,
+  Navigate,
+} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeDefect } from '../actions/addToDefectAction';
+import { logout } from '../actions/signOnAction';
 
 const DefectHandler = () => {
   const [category, setCategory] = useState('All');
@@ -9,6 +16,7 @@ const DefectHandler = () => {
   const addToDefector = useSelector(state => state.addToDefector);
   const [requestitem, setRequestitem] = useState('Close request');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const setCategoryValue = e => {
     setCategory(e.target.value);
   };
@@ -17,9 +25,9 @@ const DefectHandler = () => {
     setPriority(String(e.target.value));
   };
 
-  const closeRequest = id => {
-    dispatch(closeDefect(id));
-  };
+  // const closeRequest = id => {
+  //   dispatch(closeDefect(id));
+  // };
 
   var { defectItems } = addToDefector;
 
@@ -27,8 +35,20 @@ const DefectHandler = () => {
 
   const [count, setCount] = useState(0);
 
+  const signOn = useSelector(state => state.signOn);
+
+  var { loading, error, success, auth } = signOn;
+
+  const logoutHandler = e => {
+    e.preventDefault();
+    dispatch(logout());
+  };
+
   useEffect(() => {
-    console.log(defectItemsHandler);
+    if (!auth) {
+      navigate('/');
+    }
+
     if (priority !== 'All' && category === 'All') {
       const updatedObject = defectItems.filter(
         item => String(item.priority) === String(priority)
@@ -55,18 +75,30 @@ const DefectHandler = () => {
       setDefectItemsHandler(updatedObject2);
       setCount(updatedObject2.length);
     }
-  }, [priority, category]);
+  }, [priority, category, auth, logoutHandler]);
 
   return (
     <div className='defect-items'>
       <div className='grid-container'>
         <div className='heading-container'>
           <h1 className='defect-title'>Defect Tracker</h1>
-          <span className='defect-logout'>Logout</span>
+          {auth ? (
+            <span className='defect-logout'>
+              <Link to='/' onClick={logoutHandler}>
+                Logout
+              </Link>
+            </span>
+          ) : (
+            <span className='defect-logout'>Logout</span>
+          )}
           <div className='defects-add-view'>
-            <Link to={`/add-defect`}>
+            {auth ? (
+              <Link to={`/add-defect`}>
+                <span>Add Defect</span>
+              </Link>
+            ) : (
               <span>Add Defect</span>
-            </Link>
+            )}
             <Link to={`/view-defects`}>
               <span>View Defects</span>
             </Link>
@@ -134,19 +166,20 @@ const DefectHandler = () => {
           </div>
         </div>
 
-        {defectItemsHandler.map(item => (
-          <div className='defect-rows'>
-            <div className='defect-column'>{item.category}</div>
-            <div className='defect-column'>{item.description}</div>
-            <div className='defect-column'>{item.priority}</div>
-            <div className='defect-column'>open</div>
-            <Link to='/view-defects' onClick={closeRequest(item.id)}>
+        {defectItemsHandler &&
+          defectItemsHandler.map(item => (
+            <div className='defect-rows'>
+              <div className='defect-column'>{item.category}</div>
+              <div className='defect-column'>{item.description}</div>
+              <div className='defect-column'>{item.priority}</div>
+              <div className='defect-column'>open</div>
+              {/* <Link to='/view-defects' onClick={closeRequest(item.id)}> */}
               <div className='defect-column-closerequest'>
                 {item.close === 'open' ? 'Close request' : 'No action pending'}
               </div>
-            </Link>
-          </div>
-        ))}
+              {/* </Link> */}
+            </div>
+          ))}
       </div>
     </div>
   );

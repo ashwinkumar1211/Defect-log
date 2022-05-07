@@ -10,11 +10,11 @@ export const signOnReducer = (state = {}, action) => {
     case USER_LOGIN_REQUEST:
       return { loading: true };
     case USER_LOGIN_SUCCESS:
-      return { loading: false, success: action.payload };
+      return { loading: false, success: action.payload, auth: true };
     case USER_LOGIN_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload, auth: false };
     case USER_LOGOUT:
-      return {};
+      return { auth: false };
     default:
       return state;
   }

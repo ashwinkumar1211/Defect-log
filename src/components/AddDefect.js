@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToDefect } from '../actions/addToDefectAction';
+import { logout } from '../actions/signOnAction';
 
 const AddDefect = () => {
   const dispatch = useDispatch();
@@ -9,15 +10,18 @@ const AddDefect = () => {
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState(1);
+  const signOn = useSelector(state => state.signOn);
+
+  var { loading, error, auth } = signOn;
 
   const submitHandler = e => {
     e.preventDefault();
     dispatch(addToDefect(category, description, priority, Date.now()));
   };
-
+  const navigate = useNavigate();
   const addToDefector = useSelector(state => state.addToDefector);
 
-  var { success } = addToDefector;
+  const { success } = addToDefector;
 
   const setCategoryValue = e => {
     setCategory(e.target.value);
@@ -30,23 +34,42 @@ const AddDefect = () => {
   const setDescriptionValue = e => {
     setDescription(e.target.value);
   };
+  const logoutHandler = e => {
+    e.preventDefault();
+    dispatch(logout());
+  };
 
   useEffect(() => {
+    if (auth === false) {
+      navigate('/');
+    }
     if (success) {
       alert('Success');
     }
-  }, [success]);
+  }, [success, auth]);
 
   return (
     <div className='defect-items'>
       <div className='grid-container'>
         <div className='heading-container'>
           <h1 className='defect-title'>Defect Tracker</h1>
-          <span className='defect-logout'>Logout</span>
+          {auth ? (
+            <span className='defect-logout'>
+              <Link to='/' onClick={logoutHandler}>
+                Logout
+              </Link>
+            </span>
+          ) : (
+            <span className='defect-logout'>Logout</span>
+          )}
           <div className='defects-add-view'>
-            <Link to={`/add-defect`}>
+            {auth ? (
+              <Link to={`/add-defect`}>
+                <span>Add Defect</span>
+              </Link>
+            ) : (
               <span>Add Defect</span>
-            </Link>
+            )}
             <Link to={`/view-defects`}>
               <span>View Defects</span>
             </Link>
