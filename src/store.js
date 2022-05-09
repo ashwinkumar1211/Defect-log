@@ -2,11 +2,15 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { signOnReducer } from './reducers/signOnReducer';
-import { addToDefectReducer } from './reducers/addToDefectReducer';
+import {
+  addToDefectReducer,
+  closeDefectReducer,
+} from './reducers/addToDefectReducer';
 
 const reducer = combineReducers({
   signOn: signOnReducer,
   addToDefector: addToDefectReducer,
+  closeDefectItems: closeDefectReducer,
 });
 
 const defectItemsFromStorage = localStorage.getItem('defectItems')

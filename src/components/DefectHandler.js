@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { closeDefect } from '../actions/addToDefectAction';
 import { logout } from '../actions/signOnAction';
-
+import { CLOSE_DEFECT_RESET } from '../constants/addToDefectConstants';
 const DefectHandler = () => {
   const [category, setCategory] = useState('All');
   const [priority, setPriority] = useState('All');
@@ -25,9 +25,10 @@ const DefectHandler = () => {
     setPriority(String(e.target.value));
   };
 
-  // const closeRequest = id => {
-  //   dispatch(closeDefect(id));
-  // };
+  const closeRequest = (e, id) => {
+    e.preventDefault();
+    dispatch(closeDefect(id));
+  };
 
   var { defectItems } = addToDefector;
 
@@ -37,7 +38,11 @@ const DefectHandler = () => {
 
   const signOn = useSelector(state => state.signOn);
 
-  var { loading, error, success, auth } = signOn;
+  var { loading, error, success, auth, closed } = signOn;
+
+  const closeDefectItems = useSelector(state => state.closeDefectItems);
+
+  var { closed, defectItemsAfterCloseDefect } = closeDefectItems;
 
   const logoutHandler = e => {
     e.preventDefault();
@@ -45,10 +50,15 @@ const DefectHandler = () => {
   };
 
   useEffect(() => {
-    if (!auth) {
+    if (closed) {
+      dispatch({ type: CLOSE_DEFECT_RESET });
+      console.log(defectItems);
+      setDefectItemsHandler(defectItems);
+    }
+    if (auth !== true) {
       navigate('/');
     }
-
+    // filter condition starts here
     if (priority !== 'All' && category === 'All') {
       const updatedObject = defectItems.filter(
         item => String(item.priority) === String(priority)
@@ -75,7 +85,8 @@ const DefectHandler = () => {
       setDefectItemsHandler(updatedObject2);
       setCount(updatedObject2.length);
     }
-  }, [priority, category, auth, logoutHandler]);
+    // filter condition ends here
+  }, [priority, category, auth, closed]);
 
   return (
     <div className='defect-items'>
@@ -131,55 +142,67 @@ const DefectHandler = () => {
             </div>
           </div>
         </div>
-        <div>
-          <h2 className='defect-search'>Defect Details</h2>
-          <div className='count-items'>
-            <span className='defect-search-result'>Search Results :</span>
-            <span style={{ color: 'red' }}>{'  ' + count}</span>
-          </div>
-        </div>
-        <div className='defect-columns'>
-          <div className='defect-column'>
-            Defect <br /> Category
-          </div>
-          <div className='defect-column'>
-            {' '}
-            <br />
-            Description
-          </div>
-          <div
-            className='
-              defect-column'
-          >
-            {' '}
-            <br />
-            Priority
-          </div>
-          <div className='defect-column'>
-            {' '}
-            <br />
-            Status
-          </div>
+        <div className='defect-holder'>
           <div>
-            Change <br />
-            Status
-          </div>
-        </div>
-
-        {defectItemsHandler &&
-          defectItemsHandler.map(item => (
-            <div className='defect-rows'>
-              <div className='defect-column'>{item.category}</div>
-              <div className='defect-column'>{item.description}</div>
-              <div className='defect-column'>{item.priority}</div>
-              <div className='defect-column'>open</div>
-              {/* <Link to='/view-defects' onClick={closeRequest(item.id)}> */}
-              <div className='defect-column-closerequest'>
-                {item.close === 'open' ? 'Close request' : 'No action pending'}
-              </div>
-              {/* </Link> */}
+            <h2 className='defect-search'>Defect Details</h2>
+            <div className='count-items'>
+              <span className='defect-search-result'>Search Results :</span>
+              <span style={{ color: 'red' }}>{'  ' + count}</span>
             </div>
-          ))}
+          </div>
+          <div className='defect-columns'>
+            <div className='defect-column'>
+              Defect <br /> Category
+            </div>
+            <div className='defect-column'>
+              {' '}
+              <br />
+              Description
+            </div>
+            <div
+              className='
+              defect-column'
+            >
+              {' '}
+              <br />
+              Priority
+            </div>
+            <div className='defect-column'>
+              {' '}
+              <br />
+              Status
+            </div>
+            <div>
+              Change <br />
+              Status
+            </div>
+          </div>
+
+          {defectItemsHandler &&
+            defectItemsHandler.map(item => (
+              <div className='defect-rows'>
+                <div className='defect-column'>{item.category}</div>
+                <div className='defect-column'>{item.description}</div>
+                <div className='defect-column'>{item.priority}</div>
+                <div className='defect-column'>open</div>
+                {item.close === 'open' ? (
+                  <button onClick={e => closeRequest(e, item.id)}>
+                    <div className='defect-column-closerequest'>
+                      {item.close === 'open'
+                        ? 'Close request'
+                        : 'No action pending'}
+                    </div>
+                  </button>
+                ) : (
+                  <div className='defect-column-closerequest'>
+                    {item.close === 'open'
+                      ? 'Close request'
+                      : 'No action pending'}
+                  </div>
+                )}
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );

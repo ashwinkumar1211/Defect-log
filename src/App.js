@@ -9,7 +9,7 @@ export const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<SignonTracker />}></Route>
+        <Route path='/' element={<SignonTracker />} />
         <Route path='/view-defects' element={<DefectHandler />} />
         <Route path='/add-defect' element={<AddDefect />} />
       </Routes>

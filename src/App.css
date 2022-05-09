@@ -149,3 +149,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.defect-holder {
+  margin-bottom: 30px;
+}
